@@ -150,7 +150,7 @@ The test suite covers the bootstrap script, reference files, asset files, and HT
 
 ## License
 
-Apache License 2.0. See `LICENSE` for the full text.
+MIT License. See `LICENSE` for the full text.
 
 ## Acknowledgements
 
