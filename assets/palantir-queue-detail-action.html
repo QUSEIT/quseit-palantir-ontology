@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Operational Review Console</title>
+  <style>
+    :root {
+      --bg: #0a1118;
+      --bg-top: #101b28;
+      --panel: #121c27;
+      --panel-2: #172433;
+      --panel-3: #1b2b3d;
+      --line: #25374b;
+      --text: #edf3fb;
+      --muted: #8fa5bc;
+      --accent: #5dabff;
+      --accent-soft: rgba(93,171,255,0.15);
+      --ok: #22c779;
+      --warn: #f0ba48;
+      --bad: #ef6d6d;
+      --blocked: #a485ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(93,171,255,0.14), transparent 24%),
+        radial-gradient(circle at 90% 10%, rgba(34,199,121,0.08), transparent 18%),
+        linear-gradient(180deg, var(--bg-top), var(--bg));
+      color: var(--text);
+    }
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+    .topbar {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(10, 17, 24, 0.82);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    .topbar h1 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .rail {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+    }
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .metric strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 24px;
+    }
+    .app {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr) 360px;
+      gap: 1px;
+      background: var(--line);
+    }
+    .pane {
+      background: rgba(10, 17, 24, 0.96);
+      padding: 16px;
+    }
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+    .section h2 {
+      margin: 0 0 10px;
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .queue-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .queue-item:last-child { border-bottom: 0; }
+    .queue-item h3, .timeline-item h3 {
+      margin: 0;
+      font-size: 14px;
+    }
+    .subtle {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 6px;
+    }
+    .badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+    .recommend { background: rgba(34,199,121,0.16); color: var(--ok); }
+    .review { background: rgba(240,186,72,0.16); color: var(--warn); }
+    .blocked { background: rgba(164,133,255,0.16); color: var(--blocked); }
+    .escalate { background: rgba(239,109,109,0.16); color: var(--bad); }
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .kv {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .kv .cell {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px;
+    }
+    .kv small {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+    .evidence {
+      display: grid;
+      gap: 10px;
+    }
+    .evidence .item, .timeline-item {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .action-card {
+      background: linear-gradient(180deg, rgba(93,171,255,0.11), rgba(18,28,39,0.95));
+      border: 1px solid rgba(93,171,255,0.3);
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .primary { background: var(--accent); color: #07111a; }
+    .secondary { background: var(--panel-3); color: var(--text); }
+    .timeline {
+      display: grid;
+      gap: 10px;
+    }
+    @media (max-width: 1180px) {
+      .rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .app { grid-template-columns: 1fr; }
+      .detail-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .rail { grid-template-columns: 1fr; }
+      .kv { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <h1>Operational Review Console</h1>
+      <div class="rail">
+        <div class="metric"><span>Objects in scope</span><strong>128</strong></div>
+        <div class="metric"><span>Review required</span><strong>12</strong></div>
+        <div class="metric"><span>Recommended</span><strong>31</strong></div>
+        <div class="metric"><span>Blocked</span><strong>4</strong></div>
+        <div class="metric"><span>Target variance</span><strong>-6.4%</strong></div>
+      </div>
+    </header>
+    <div class="app">
+      <aside class="pane">
+        <div class="section">
+          <h2>Filters</h2>
+          <div class="filters">
+            <div class="chip">FY2026</div>
+            <div class="chip">Segment: Industrial</div>
+            <div class="chip">Severity: High</div>
+            <div class="chip">Status: Open</div>
+          </div>
+        </div>
+        <div class="section">
+          <h2>Priority Queue</h2>
+          <div class="queue-item">
+            <h3>Capex variance in core plant expansion</h3>
+            <div class="subtle">Initiative · FY2026 · Owner: Strategy Office</div>
+            <div class="badges"><span class="badge review">Review required</span><span class="badge escalate">Escalate</span></div>
+          </div>
+          <div class="queue-item">
+            <h3>Operating margin recovery below plan</h3>
+            <div class="subtle">Business Segment · Updated 2h ago</div>
+            <div class="badges"><span class="badge recommend">Recommended</span></div>
+          </div>
+          <div class="queue-item">
+            <h3>Guidance revision lacks mitigation detail</h3>
+            <div class="subtle">Disclosure Event · CFO statement</div>
+            <div class="badges"><span class="badge blocked">Blocked</span></div>
+          </div>
+        </div>
+      </aside>
+      <main class="pane">
+        <div class="detail-grid">
+          <div class="section">
+            <h2>Selected Object</h2>
+            <h3 style="margin:0 0 8px;font-size:20px;">Core Plant Expansion Program</h3>
+            <div class="subtle">Strategic Initiative · FY2026 Delivery Risk · Linked to Industrial Segment</div>
+            <div class="kv" style="margin-top:12px;">
+              <div class="cell"><small>Plan</small>Capex 22.0B JPY</div>
+              <div class="cell"><small>Actual</small>Capex 27.4B JPY</div>
+              <div class="cell"><small>Variance</small>-24.5%</div>
+              <div class="cell"><small>Owner</small>Strategy Office</div>
+            </div>
+          </div>
+          <div class="section">
+            <h2>Decision State</h2>
+            <div class="badges"><span class="badge review">Review required</span><span class="badge escalate">High impact</span></div>
+            <div class="subtle">Reason: variance breaches threshold and mitigation confidence is low.</div>
+            <div class="actions">
+              <button class="primary">Approve mitigation</button>
+              <button class="secondary">Escalate to CFO</button>
+              <button class="secondary">Request review</button>
+            </div>
+          </div>
+        </div>
+        <div class="section">
+          <h2>Evidence</h2>
+          <div class="evidence">
+            <div class="item">
+              <h3>Signal: capex variance crossed review threshold</h3>
+              <div class="subtle">Threshold: 10% · Current: 24.5% · Source: mid-term plan tracker</div>
+            </div>
+            <div class="item">
+              <h3>Management statement changed tone on supplier readiness</h3>
+              <div class="subtle">Detected in latest IR material and earnings call summary</div>
+            </div>
+            <div class="item">
+              <h3>Linked risk open: commissioning delay</h3>
+              <div class="subtle">Affects margin recovery and FY2027 output ramp</div>
+            </div>
+          </div>
+        </div>
+        <div class="section">
+          <h2>Timeline</h2>
+          <div class="timeline">
+            <div class="timeline-item">
+              <h3>2026-05-10 · CFO note added</h3>
+              <div class="subtle">Mitigation confidence downgraded to medium-low.</div>
+            </div>
+            <div class="timeline-item">
+              <h3>2026-05-08 · New variance signal generated</h3>
+              <div class="subtle">Capex exceeded review boundary.</div>
+            </div>
+            <div class="timeline-item">
+              <h3>2026-04-25 · Supplier risk linked</h3>
+              <div class="subtle">Delivery slippage attached to initiative.</div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <section class="pane">
+        <div class="section action-card">
+          <h2>Action Preview</h2>
+          <h3 style="margin:0 0 8px;font-size:18px;">Escalate to CFO</h3>
+          <div class="subtle">Writeback target: `StrategicInitiative.reviewStatus`, `DecisionLog`, `EscalationOwner`</div>
+          <div class="subtle" style="margin-top:10px;">Required evidence: variance signal, mitigation note, linked risk, latest management statement.</div>
+        </div>
+        <div class="section">
+          <h2>Review Notes</h2>
+          <div class="subtle">Capture operator reasoning, requested follow-up, and approval boundaries here.</div>
+        </div>
+        <div class="section">
+          <h2>Linked Objects</h2>
+          <div class="queue-item">
+            <h3>Industrial Segment</h3>
+            <div class="subtle">Margin impact object</div>
+          </div>
+          <div class="queue-item">
+            <h3>Commissioning Delay Risk</h3>
+            <div class="subtle">Active linked risk</div>
+          </div>
+          <div class="queue-item">
+            <h3>FY2027 Ramp KPI</h3>
+            <div class="subtle">Dependent target metric</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

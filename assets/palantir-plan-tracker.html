@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Strategy Plan Tracker</title>
+  <style>
+    :root {
+      --bg: #091018;
+      --panel: #111b27;
+      --panel-2: #172230;
+      --line: #243749;
+      --text: #edf4fb;
+      --muted: #92a8bf;
+      --accent: #67b0ff;
+      --ok: #24c979;
+      --warn: #f2bc4d;
+      --bad: #ef6d6d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(103,176,255,0.14), transparent 24%),
+        linear-gradient(180deg, #0d1520, var(--bg));
+      color: var(--text);
+    }
+    .page {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .panel {
+      background: rgba(17, 27, 39, 0.96);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+    h2 {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+    .rail {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .metric {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .metric strong {
+      display: block;
+      font-size: 24px;
+      margin-top: 8px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 14px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+    }
+    th {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .ok { background: rgba(36,201,121,0.15); color: var(--ok); }
+    .warn { background: rgba(242,188,77,0.15); color: var(--warn); }
+    .bad { background: rgba(239,109,109,0.15); color: var(--bad); }
+    .timeline-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .timeline-item:last-child { border-bottom: 0; }
+    @media (max-width: 1080px) {
+      .hero, .grid { grid-template-columns: 1fr; }
+      .rail { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .rail { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="hero">
+      <section class="panel">
+        <h2>Strategy Overview</h2>
+        <h1>Mid-term Plan Delivery Monitor</h1>
+        <p style="color:var(--muted);">Track target delivery, initiative health, and review-required variances across the plan horizon.</p>
+        <div class="rail">
+          <div class="metric"><h2>Goals on track</h2><strong>6 / 9</strong></div>
+          <div class="metric"><h2>Open variances</h2><strong>5</strong></div>
+          <div class="metric"><h2>Review required</h2><strong>3</strong></div>
+          <div class="metric"><h2>Latest update</h2><strong>FY2026 Q2</strong></div>
+        </div>
+      </section>
+      <aside class="panel">
+        <h2>Review Queue</h2>
+        <div class="timeline-item"><strong>Margin recovery</strong><p style="color:var(--muted);margin-top:6px;">Below plan in Industrial segment</p></div>
+        <div class="timeline-item"><strong>Capex discipline</strong><p style="color:var(--muted);margin-top:6px;">Overspend requires finance review</p></div>
+        <div class="timeline-item"><strong>Overseas mix target</strong><p style="color:var(--muted);margin-top:6px;">Trend weakening vs target trajectory</p></div>
+      </aside>
+    </div>
+    <div class="grid">
+      <section class="panel">
+        <h2>Initiatives</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Initiative</th>
+              <th>Target</th>
+              <th>Actual</th>
+              <th>Variance</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Plant expansion</td><td>22.0B</td><td>27.4B</td><td>-24.5%</td><td><span class="badge bad">Review</span></td></tr>
+            <tr><td>Margin recovery</td><td>14.0%</td><td>12.3%</td><td>-1.7pt</td><td><span class="badge warn">Watch</span></td></tr>
+            <tr><td>Overseas growth</td><td>50%</td><td>47%</td><td>-3pt</td><td><span class="badge warn">Watch</span></td></tr>
+            <tr><td>R&D throughput</td><td>9 launches</td><td>8 launches</td><td>-1</td><td><span class="badge ok">On track</span></td></tr>
+          </tbody>
+        </table>
+      </section>
+      <section class="panel">
+        <h2>Event Timeline</h2>
+        <div class="timeline-item"><strong>2026-05-10</strong><p style="color:var(--muted);margin-top:6px;">Guidance commentary softened on supplier readiness.</p></div>
+        <div class="timeline-item"><strong>2026-05-08</strong><p style="color:var(--muted);margin-top:6px;">Capex variance breached review threshold.</p></div>
+        <div class="timeline-item"><strong>2026-04-25</strong><p style="color:var(--muted);margin-top:6px;">Commissioning delay linked to initiative risk.</p></div>
+        <div class="timeline-item"><strong>2026-04-10</strong><p style="color:var(--muted);margin-top:6px;">New mitigation owner assigned.</p></div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

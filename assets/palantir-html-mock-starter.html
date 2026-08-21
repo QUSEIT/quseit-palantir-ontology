@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Palantir-Style Operational Mock</title>
+  <style>
+    :root {
+      --bg: #091018;
+      --panel: #111b26;
+      --panel-2: #172433;
+      --border: #243447;
+      --text: #eaf2fb;
+      --muted: #91a5bc;
+      --accent: #57a7ff;
+      --ok: #24c57a;
+      --warn: #f1bd4a;
+      --bad: #f06f6f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(87,167,255,0.14), transparent 26%),
+        linear-gradient(180deg, #0b121b, var(--bg));
+    }
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 300px 1fr 360px;
+      gap: 1px;
+      background: var(--border);
+    }
+    .pane {
+      background: rgba(9, 16, 24, 0.96);
+      padding: 18px;
+    }
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 14px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: 18px; margin-bottom: 12px; }
+    h2 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .rail {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .metric {
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .metric strong {
+      display: block;
+      font-size: 24px;
+      margin-top: 6px;
+    }
+    .row {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .row:last-child { border-bottom: 0; }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+    .ok { background: rgba(36,197,122,0.14); color: var(--ok); }
+    .warn { background: rgba(241,189,74,0.14); color: var(--warn); }
+    .bad { background: rgba(240,111,111,0.14); color: var(--bad); }
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .primary {
+      background: var(--accent);
+      color: #07111a;
+    }
+    .secondary {
+      background: #243447;
+      color: var(--text);
+    }
+    @media (max-width: 1040px) {
+      .app { grid-template-columns: 1fr; }
+      .rail { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .rail { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="pane">
+      <h1>Queue</h1>
+      <div class="section">
+        <h2>Filters</h2>
+        <p>Status, segment, owner, period, severity</p>
+      </div>
+      <div class="section">
+        <h2>Review Items</h2>
+        <div class="row">Capital allocation variance<div class="badge warn">Review required</div></div>
+        <div class="row">Guidance revision<div class="badge bad">Escalate</div></div>
+        <div class="row">Margin recovery<div class="badge ok">Recommended</div></div>
+      </div>
+    </aside>
+    <main class="pane">
+      <div class="rail">
+        <div class="metric"><h2>Coverage</h2><strong>84%</strong></div>
+        <div class="metric"><h2>Open Reviews</h2><strong>12</strong></div>
+        <div class="metric"><h2>Plan Variance</h2><strong>-6.4%</strong></div>
+        <div class="metric"><h2>Risk Score</h2><strong>71</strong></div>
+      </div>
+      <div class="section">
+        <h2>Selected Object</h2>
+        <p>Show the active company, segment, or initiative with signals, evidence, and linked records.</p>
+      </div>
+      <div class="section">
+        <h2>Timeline</h2>
+        <p>Use for disclosures, decisions, approvals, bottlenecks, and state changes.</p>
+      </div>
+    </main>
+    <section class="pane">
+      <div class="section">
+        <h2>Action Panel</h2>
+        <p>Show recommendation, permission state, required evidence, and writeback preview.</p>
+        <div class="actions">
+          <button class="primary">Approve</button>
+          <button class="secondary">Send To Review</button>
+        </div>
+      </div>
+      <div class="section">
+        <h2>Audit Notes</h2>
+        <p>Capture operator rationale, decision notes, and review trail.</p>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

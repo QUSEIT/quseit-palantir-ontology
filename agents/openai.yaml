@@ -1,0 +1,7 @@
+interface:
+  display_name: "Palantir Ontology"
+  short_description: "Design local AI decision systems."
+  default_prompt: "Use $palantir-ontology to turn this business problem and available context into an ontology-driven decision system spec with actions, guardrails, and evaluation."
+
+policy:
+  allow_implicit_invocation: true
